@@ -132,6 +132,25 @@ export default function ProfileCreation() {
 
             {/* Upload Section */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+{/* ID Card */}
+<div className="bg-gray-50 p-6 rounded-xl">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">ID Verification</h3>
+                <input
+                  type="file"
+                  id="idCard"
+                  onChange={handleIdUpload}
+                  className="w-full p-3 border rounded-xl focus:ring-purple-400 focus:outline-none bg-white mb-4"
+                />
+                {idCard && (
+                  <img
+                    src={idCard}
+                    alt="ID Card"
+                    className="w-full mt-4 rounded-xl shadow-md"
+                  />
+                )}
+                <p className="mt-2 text-gray-700">USN: {!matchedPattern ? "Waiting..." : matchedPattern}</p>
+              </div>
+
               {/* Profile Pictures */}
               <div className="bg-gray-50 p-6 rounded-xl">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">Profile Pictures</h3>
@@ -154,24 +173,7 @@ export default function ProfileCreation() {
                 </div>
               </div>
 
-              {/* ID Card */}
-              <div className="bg-gray-50 p-6 rounded-xl">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">ID Verification</h3>
-                <input
-                  type="file"
-                  id="idCard"
-                  onChange={handleIdUpload}
-                  className="w-full p-3 border rounded-xl focus:ring-purple-400 focus:outline-none bg-white mb-4"
-                />
-                {idCard && (
-                  <img
-                    src={idCard}
-                    alt="ID Card"
-                    className="w-full mt-4 rounded-xl shadow-md"
-                  />
-                )}
-                <p className="mt-2 text-gray-700">USN: {!matchedPattern ? "Waiting..." : matchedPattern}</p>
-              </div>
+              
             </div>
 
             {/* Form Section */}
