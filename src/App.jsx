@@ -10,6 +10,8 @@ import Profile from './components/Profile'
 import SwipeMatch from './components/Matching'
 import EditProfilePage from './components/EditProfilePage'
 import DeleteProfilePage from './components/DeleteProfilePage'
+import AboutUs from './components/AboutUs'
+import Features from './components/Features'
 
 function App() {
 
@@ -24,6 +26,8 @@ function App() {
           <Route path='/match' element={<SwipeMatch />} />
           <Route path="/profile/edit" element={<EditProfilePage />} />
           <Route path="/profile/delete" element={<DeleteProfilePage />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/features" element={<Features />} />
         </Routes>
       </BrowserRouter>
     </>

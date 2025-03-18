@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import supabase from "../../utils/supabase.js";
+import Header from "./Header.jsx";
 
 export default function AuthPage() {
   const navigate = useNavigate();
@@ -60,25 +61,28 @@ export default function AuthPage() {
   
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-pink-50 text-gray-800 p-6">
-      <div ref={formRef} className="bg-white shadow-xl rounded-2xl p-8 max-w-sm w-full">
-        <h2 ref={title} className="text-2xl font-bold text-pink-600 text-center">
+    <div>
+      <Header />
+      <div className="flex flex-col items-center justify-center min-h-screen bg-yellow-400 text-gray-900 p-6 overflow-hidden">
+      <div className="absolute inset-0 bg-[url('https://via.placeholder.com/1500x800')] bg-cover bg-center opacity-10"></div>
+      <div ref={formRef} className="relative z-10 bg-white shadow-2xl rounded-2xl p-8 max-w-md h-auto mt-[3em] w-full border border-gray-200">
+        <h2 ref={title} className="text-3xl font-bold text-purple-600 text-center mb-6">
           {isSignUp ? "Create an Account" : "Welcome Back"}
         </h2>
-        <form className="mt-6 flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+        <form className="mt-6 flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
           <input
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             type="email"
             placeholder="Email"
-            className="w-full p-3 border rounded-lg focus:ring-pink-400 focus:outline-none"
+            className="w-full p-4 border rounded-xl focus:ring-purple-400 focus:outline-none bg-gray-50 text-gray-800 placeholder-gray-500"
           />
           <input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             placeholder="Password"
-            className="w-full p-3 border rounded-lg focus:ring-pink-400 focus:outline-none"
+            className="w-full p-4 border rounded-xl focus:ring-purple-400 focus:outline-none bg-gray-50 text-gray-800 placeholder-gray-500"
           />
           {isSignUp && (
             <input
@@ -86,25 +90,27 @@ export default function AuthPage() {
               onChange={(e) => setConfirm(e.target.value)}
               type="password"
               placeholder="Confirm Password"
-              className="w-full p-3 border rounded-lg focus:ring-pink-400 focus:outline-none"
+              className="w-full p-4 border rounded-xl focus:ring-purple-400 focus:outline-none bg-gray-50 text-gray-800 placeholder-gray-500"
             />
           )}
           <button
             ref={button}
             onClick={handleAuth}
             type="submit"
-            className="w-full py-3 bg-pink-500 text-white font-semibold rounded-lg hover:bg-pink-600 transition-transform transform hover:scale-105"
+            className="w-full py-3 bg-gray-900 text-yellow-400 font-semibold rounded-xl hover:bg-gray-800 transition-transform transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
             {isSignUp ? "Sign Up" : "Login"}
           </button>
         </form>
-        <p className="text-center text-gray-600 mt-4">
+        <p className="text-center text-gray-600 mt-6">
           {isSignUp ? "Already have an account?" : "Don't have an account?"}
-          <button onClick={() => setIsSignUp(!isSignUp)} className="text-pink-500 font-semibold hover:underline ml-1">
+          <button onClick={() => setIsSignUp(!isSignUp)} className="text-purple-600 font-semibold hover:underline ml-1">
             {isSignUp ? "Login" : "Sign Up"}
           </button>
         </p>
       </div>
     </div>
+    </div>
+    
   );
 }
