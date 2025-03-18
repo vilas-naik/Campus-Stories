@@ -5,35 +5,18 @@ import supabase from "../../utils/supabase.js";
 
 export default function AuthPage() {
   const navigate = useNavigate();
-
-  // States
   const [isSignUp, setIsSignUp] = useState(false);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
 
-  // Refs
   const formRef = useRef(null);
   const title = useRef(null);
-  const input = useRef(null);
   const button = useRef(null);
-  const already = useRef(null);
 
   useEffect(() => {
-    gsap.fromTo(
-      formRef.current,
-      { opacity: 0, y: 50 },
-      { opacity: 1, y: 0, duration: 2, ease: "power2.out", stagger: 0.2 }
-    );
+    gsap.fromTo(formRef.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 2, ease: "power2.out" });
   }, [isSignUp]);
-
-  useEffect(() => {
-    const tl = gsap.timeline({ ease: "power2.out" });
-
-    tl.fromTo(title.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 2 })
-      .fromTo(input.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 2 }, "-=1.5")
-      .fromTo(button.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 2 }, "-=1.5");
-  }, []);
 
   const handleAuth = async () => {
     if (isSignUp) {
@@ -41,45 +24,40 @@ export default function AuthPage() {
         alert("Passwords do not match!");
         return;
       }
-
-      const { data: existingUser, error: userCheckError } = await supabase
-        .from("users")
-        .select("username")
-        .eq("username", userName)
-        .single();
-
-      if (existingUser) {
-        alert("Username already exists. Please choose another.");
-        return;
-      }
-
-      const { data, error } = await supabase.from("users").insert([
-        { username: userName, password: password }
-      ]);
-
+  
+      const { error } = await supabase.auth.signUp({ email: userName, password });
+  
       if (error) {
         alert("Error signing up: " + error.message);
       } else {
-        alert("Sign up successful! You can now log in.");
+        alert("Sign up successful! Check your email to verify your account.");
         setIsSignUp(false);
       }
     } else {
-      const { data: user, error } = await supabase
-        .from("users")
-        .select("username, password")
-        .eq("username", userName)
-        .single();
-
-      if (!user) {
-        alert("User not found!");
-      } else if (user.password !== password) {
-        alert("Incorrect password!");
+      const { data, error } = await supabase.auth.signInWithPassword({ email: userName, password });
+  
+      if (error) {
+        alert("Login failed: " + error.message);
       } else {
-        alert("Login successful!");
-        navigate("/profile"); 
+        // Store session
+        localStorage.setItem("session", JSON.stringify(data.session));
+  
+        // Check if the user has a profile
+        const { data: profileData, error: profileError } = await supabase
+          .from("profile")
+          .select("*")
+          .eq("email", userName)
+          .single();
+  
+        if (profileError || !profileData) {
+          navigate("/profileCreate"); // Navigate to profile creation page if no profile exists
+        } else {
+          navigate("/profile"); // Navigate to profile page if profile exists
+        }
       }
     }
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-pink-50 text-gray-800 p-6">
@@ -89,15 +67,13 @@ export default function AuthPage() {
         </h2>
         <form className="mt-6 flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
           <input
-            ref={input}
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
-            type="text"
-            placeholder="Username"
+            type="email"
+            placeholder="Email"
             className="w-full p-3 border rounded-lg focus:ring-pink-400 focus:outline-none"
           />
           <input
-            ref={input}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
@@ -106,7 +82,6 @@ export default function AuthPage() {
           />
           {isSignUp && (
             <input
-              ref={input}
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               type="password"
@@ -123,12 +98,9 @@ export default function AuthPage() {
             {isSignUp ? "Sign Up" : "Login"}
           </button>
         </form>
-        <p className="text-center text-gray-600 mt-4" ref={already}>
+        <p className="text-center text-gray-600 mt-4">
           {isSignUp ? "Already have an account?" : "Don't have an account?"}
-          <button
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-pink-500 font-semibold hover:underline ml-1"
-          >
+          <button onClick={() => setIsSignUp(!isSignUp)} className="text-pink-500 font-semibold hover:underline ml-1">
             {isSignUp ? "Login" : "Sign Up"}
           </button>
         </p>

@@ -1,40 +1,16 @@
 import { useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useNavigate } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function AtomicLanding() {
-  useEffect(() => {
-    gsap.from(".fade-in", { opacity: 0, y: 50, duration: 1, stagger: 0.3 });
-    gsap.to(".fade-in", { opacity: 1, y: 0, duration: 2, stagger: 0.3 });
-
-    gsap.from(".swipe-effect", {
-      x: "100%",
-      opacity: 0,
-      duration: 1.5,
-      ease: "power3.out",
-    });
-    gsap.to(".swipe-effect", {
-      x: 0,
-      opacity: 1,
-      duration: 3,
-      ease: "power3.out",
-    });
-  }, []);
-
+  const navigate = useNavigate();
+  
   return (
     <div className="bg-gradient-to-b from-pink-500 via-purple-500 to-red-500 min-h-screen text-white font-sans">
-      {/* Hero Section */}
-      <header className="flex flex-col items-center justify-center h-screen text-center p-8">
-        <h1 className="text-5xl font-bold fade-in">Welcome to Atomic</h1>
-        <p className="text-lg mt-4 fade-in max-w-md">
-          The dating app designed to be deleted. Find meaningful connections effortlessly.
-        </p>
-        <button className="mt-6 px-6 py-3 bg-white text-pink-500 font-semibold rounded-full shadow-lg fade-in hover:scale-105 transition">
-          Get Started
-        </button>
-      </header>
+      <button onClick={() => navigate('/auth')}>Get Started</button>
 
       {/* Features Section */}
       <section className="py-20 px-8 bg-white text-black">
